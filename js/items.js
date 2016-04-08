@@ -1,44 +1,43 @@
 'use strict';
 
-function Item(name, consumable, weight){
-  this.name = name;
-  this.consumable = consumable;
-  this.weight = weight;
-}
+class Item{
+  constructor(name, consumable, weight){
+    this.name = name;
+    this.consumable = consumable;
+    this.weight = weight;
+  }
 
-Item.prototype.carry = function(target, item){
-  target.items[this.name] = item;
-}
+  carry(target, item){
+    target.items[this.name] = item;
+  }
 
-Item.prototype.discard = function(target, item) {
-  delete target.items[this.name];
-}
-
-
-
-function Health(name, weight, power) {
-  Item.call(this, name, weight);
-  this.consumable = true;
-  this.power = power
-}
-
-Health.prototype = new Item();
-
-Health.prototype.use = function(target){
-  target.gainHealth(this.power)
-  this.discard(target, this)
+  discard(target, item) {
+    delete target.items[this.name];
+  }
 }
 
 
 
-function Weapon(name, weight, power){
-  Item.call(this, name, weight);
-  this.consumable = false;
-  this.power = power;
+class Health extends Item {
+  constructor(name, weight, power) {
+    super(name, weight);
+    this.consumable = true;
+    this.power = power;
+  }
+  use(target){
+    target.gainHealth(this.power)
+    this.discard(target, this)
+  }
 }
 
-Weapon.prototype = new Item();
+class Weapon extends Item{
+  constructor(name, weight, power){
+    super(name, weight);
+    this.consumable = false;
+    this.power = power;
+  }
 
-Weapon.prototype.use = function(target) {
-  target.takeDamage(this.power)
+  use(target) {
+    target.takeDamage(this.power)
+  }
 }

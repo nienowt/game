@@ -146,6 +146,7 @@
 	        brokenBottle.carry(this.player, brokenBottle)
 	        this.pack = this.player.items
 	        this.health = 70;
+	        this.position = 'done'
 	      } else {
 	        this.output = 'You\'ve crossed me for the last time, game over'
 	        this.health = 0;
