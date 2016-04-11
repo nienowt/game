@@ -43,6 +43,18 @@ Wizard.prototype.gainMana = function(mana){
   this.mana += mana;
   }
 
+function Astronaut(name, strength, power){
+  Creature.call(this, name, strength)
+  this.power = power;
+  this.energy = 10;
+}
+
+Astronaut.prototype = new Creature();
+
+Astronaut.prototype.attackPower = function(target) {
+  target.takeDamage(this.power);
+  this.energy -= 1;
+}
 
 ///enemies
 

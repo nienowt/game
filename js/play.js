@@ -5,7 +5,7 @@ require('angular')
 
 angular.module('game', [])
   .controller('GameController', function (){
-    this.output = 'Welcome, what is your name';
+    this.output = 'Welcome, enter your name and character type (wizard or astronaut)';
     this.position = 0;
     this.health;
     this.mana;
@@ -16,16 +16,31 @@ angular.module('game', [])
     this.player;
     this.newEnemy;
     this.item;
+    this.chartype;
 
-    this.newPlayer = function(person){
-      var newPlayer = new Wizard(person, 10, 50)
-      this.player = newPlayer;
-      this.output = 'Alright ' + this.player.name + ', let\'s begin. Enter the room to your left, or your right.'
-      this.position += 1;
-      this.health = this.player.hp;
-      this.mana = this.player.mana;
-      this.power = this.player.power;
-      this.pack = this.player.items;
+    this.newPlayer = function(person, chartype){
+      if(chartype == 'wizard'){
+        var newPlayer = new Wizard(person, 10, 50)
+        this.player = newPlayer;
+        this.output = 'Alright ' + this.player.name + ', let\'s begin. Enter the room to your left, or your right.'
+        this.position += 1;
+        this.health = this.player.hp;
+        this.mana = this.player.mana;
+        this.power = this.player.power;
+        this.pack = this.player.items;
+        this.chartype = 'wizard'
+      }
+      if(chartype == 'astronaut'){
+        var newPlayer = new Astronaut(person, 10, 55)
+        this.player = newPlayer;
+        this.output = 'Alright ' + this.player.name + ', let\'s begin. Enter the room to your left, or your right.'
+        this.position += 1;
+        this.health = this.player.hp;
+        this.energy = this.player.energy;
+        this.power = this.player.power;
+        this.pack = this.player.items;
+        this.chartype = 'astronaut'
+      }
     }
 
     this.newRoom = function(room) {
@@ -33,7 +48,8 @@ angular.module('game', [])
         var enemy = new MeltRat('Pete the meltrat', 5);
         this.newEnemy = enemy;
         this.position = 2;
-        this.output = 'A MeltRat attacks!, defend yourself with magic';
+        if(this.chartype == 'wizard') this.output = 'A MeltRat attacks!, defend yourself with magic';
+        if(this.chartype =='astronaut') this.output = 'A MeltRat attacks!, defend yourself with \'space magic\'';
         enemy.infect(this.player)
         this.health = this.player.hp;
         this.enemy = 1;
@@ -55,12 +71,13 @@ angular.module('game', [])
     }
 
     this.fight = function(attack){
-      if (attack == 'magic'){
+      if (attack == 'magic' || 'space magic'){
         this.output = 'Keep fighting!'
         this.player.attackPower(this.newEnemy)
         this.newEnemy.attack(this.player)
         this.health = this.player.hp;
-        this.mana = this.player.mana;
+        if(this.chartype == 'wizard') this.mana = this.player.mana;
+        if(this.chartype == 'astronaut') this.power = this.player.power
         this.power = this.player.power;
         this.enemyHealth = this.newEnemy.hp;
         if(this.enemyHealth > 0) {
@@ -78,7 +95,8 @@ angular.module('game', [])
     }
     this.drink = function(potion){
       if(potion == 'drink') {
-        this.output = 'You win! You are the healthiest wizard in town!'
+        if(this.chartype == 'wizard') this.output = 'You win! You are the healthiest wizard in town!'
+        if(this.chartype == 'astronaut') this.output = 'You win! You are the healthiest astronaut in town!'
         this.potion.use(this.player)
         this.pack = this.player.items;
         this.health = this.player.hp;

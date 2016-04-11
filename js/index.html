@@ -10,15 +10,17 @@
         <h1>{{gamectrl.output}}</h1>
         <div ng-show="gamectrl.position">
           <p>Health: {{gamectrl.health}}</p>
-          <p>Mana: {{gamectrl.mana}} </p>
+          <p ng-show="gamectrl.chartype === 'wizard'">Mana: {{gamectrl.mana}} </p>
+          <p ng-show="gamectrl.chartype === 'astronaut'">Energy: {{gamectrl.energy}} </p>
           <p>Power: {{gamectrl.power}} </p>
           <p>Carrying: {{gamectrl.pack}} </p>
         </div>
         <div ng-show="gamectrl.enemy">
           <p>Enemy Health: {{gamectrl.enemyHealth}}</p>
         </div>
-        <form data-ng-submit="gamectrl.newPlayer(person)" ng-show="!gamectrl.position">
-          <input type="text" data-ng-model="person"/>
+        <form data-ng-submit="gamectrl.newPlayer(person, chartype)" ng-show="!gamectrl.position">
+          Name: <input type="text" data-ng-model="person"/>
+          Character Type: <input type="text" data-ng-model="chartype"/>
           <button type="submit">submit</button>
         </form>
         <form data-ng-submit="gamectrl.newRoom(room)" ng-show="gamectrl.position === 1">
